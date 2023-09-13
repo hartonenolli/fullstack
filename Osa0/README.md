@@ -4,7 +4,6 @@ sequenceDiagram
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     Note right of browser: Redirecting status code 302
     server-->>browser: HTML document
-    
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     server-->>browser: HTML document
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
@@ -19,11 +18,20 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    Note right of browser: Status code 200
     server-->>browser: HTML document
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     server-->>browser: CSS file
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
     server-->>browser: JavaScript file
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    server-->>browser: Jason file data
+```
+
+# Tehtävä 6
+```mermaid
+sequenceDiagram
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    Note right of browser: Status code 201
     server-->>browser: Jason file data
 ```
