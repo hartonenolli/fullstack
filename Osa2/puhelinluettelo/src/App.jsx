@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Filter = ({ showBy, handlePersonsToShow }) => {
   return (
@@ -33,22 +34,21 @@ const Persons = ({ personsToShow }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
-
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
-
   const [newNumber, setNewNumber] = useState('')
-
   const [showBy, setShowBy] = useState('')
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+      setPersons(response.data)
+      })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
-    console.log('button clicked', event.target)
     const personObject = {
       name: newName,
       number: newNumber
@@ -63,17 +63,17 @@ const App = () => {
   }
 
   const handlePersonChange = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
   const handlePersonsToShow = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     setShowBy(event.target.value)
   }
 
