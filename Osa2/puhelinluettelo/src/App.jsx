@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
+import './index.css'
 
 const Filter = ({ showBy, handlePersonsToShow }) => {
   return (
@@ -41,6 +41,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showBy, setShowBy] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -63,6 +65,17 @@ const App = () => {
           .updatePerson(id, personObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+            setMessage(`Updated ${returnedPerson.name}`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setErrorMessage(`Information of ${personObject.name} has already been removed from server`)
+            setPersons(persons.filter(person => person.id !== id))
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
       }
       return
@@ -74,6 +87,10 @@ const App = () => {
       })
     setNewName('')
     setNewNumber('')
+    setMessage(`Added ${personObject.name}`)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   }
 
   const deletePerson = (id) => {
@@ -82,7 +99,33 @@ const App = () => {
       .deletePerson(id)
       .then(() => {
         setPersons(persons.filter(person => person.id !== id))
+        setMessage(`Deleted ${persons.find(person => person.id === id).name}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })}}
+
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+    return (
+      <div className="notification">
+        {message}
+      </div>
+    )
+  }
+
+  const ErrorNotification = ({ errorMessage }) => {
+    if (errorMessage === null) {
+      return null
+    }
+    return (
+      <div className="error">
+        {errorMessage}
+      </div>
+    )
+  }
 
   const handlePersonChange = (event) => {
     //console.log(event.target.value)
@@ -106,6 +149,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
+      <ErrorNotification errorMessage={errorMessage} />
       <Filter showBy={showBy} handlePersonsToShow={handlePersonsToShow} />
       <h3>Add a new</h3>
       <PersonForm addPerson={addPerson}
