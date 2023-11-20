@@ -1,6 +1,23 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const FetchInformation = ({ selectedCountry, country }) => {
+  const [countryData, setCountryData] = useState([])
+  useEffect(() => {
+    axios
+      .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${selectedCountry}`)
+      .then(response => {
+        // Make an array of the data
+        if (countryData.length < 1) {
+          setCountryData(countryData.concat(response.data))
+        }
+      })
+  }, [country])
+  return (
+    <CountryInformation countryData={countryData} />
+  )
+}
+
 const CountryInformation = ({ countryData }) => {
   if (countryData.length === 1) {
     return (
@@ -20,7 +37,25 @@ const CountryInformation = ({ countryData }) => {
   }
 }
 
-const CountryList = ({ countryList }) => {
+const CountryList = ({ countryList, country }) => {
+  const [showCountry, setShowCountry] = useState(false)
+  const [selectedCountry, setSelectedCountry] = useState('')
+
+  const handleSubmit = (event, countryName) => {
+    event.preventDefault()
+    setSelectedCountry(countryName)
+    setShowCountry(true)
+  }
+  if (showCountry) {
+    return (
+      <FetchInformation selectedCountry={selectedCountry} country={country} />
+    )
+  }
+  if (countryList.length === 1) {
+    return (
+      <FetchInformation selectedCountry={countryList[0].name.common} country={country} />
+    )
+  }
   if (countryList.length > 10) {
     return (
       <p>Too many maching countries, specify another filter</p>
@@ -28,72 +63,103 @@ const CountryList = ({ countryList }) => {
   }
   if (countryList.length > 1 && countryList.length < 10) {
     return (
-      <ul>
-        {countryList.map((country, i) => (
-          <li key={i}>{country.name.common}</li>
-        ))}
-      </ul>
+      <form onSubmit={handleSubmit}>
+        <ul>
+          {countryList.map((country, i) => (
+            <li key={i}>{country.name.common}
+              <button onClick={(event) => handleSubmit(event, country.name.common)}>show</button>
+            </li>
+          ))}
+        </ul>
+      </form>
     )
   }
 }
 
-
 function App() {
   const [name, setName] = useState('')
-  const [countryList, setCountryList] = useState([])
-  const [countryData, setCountryData] = useState([])
   const [filteredCountryList, setFilteredCountryList] = useState([])
-  const [country, setCountry] = useState(null)
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
-    if (country) {
+    if (selectedCountry) {
+      axios
+        .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${selectedCountry}`)
+        .then(response => {
+          setFilteredCountryList([response.data])
+        })
+        .catch(error => console.error('Error fetching country:', error))
+    } else {
       axios
         .get('https://studies.cs.helsinki.fi/restcountries/api/all')
         .then(response => {
-          const filteredCountries = Object.values(response.data).filter(country =>
+          const filteredCountries = response.data.filter(country =>
             country.name.common.toLowerCase().startsWith(name.toLowerCase())
-          );
-  
-          setFilteredCountryList(prevFilteredCountryList => filteredCountries);
-          setCountryList(filteredCountries);
-          fetchCountryData(filteredCountries);
+          )
+
+          setFilteredCountryList(filteredCountries)
         })
-        .catch(error => console.error('Error fetching countries:', error));
+        .catch(error => console.error('Error fetching countries:', error))
     }
-  }, [country, name]);
-  
-  const fetchCountryData = (countryList) => {
-    // if countryList lenght is 1, we can fetch the data from api/name
-    if (countryList.length === 1) {
-      console.log('country list has one country', countryList[0].name.common.toLowerCase());
-      axios
-        .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${countryList[0].name.common.toLowerCase()}`)
-        .then(response => {
-          // Make an array of the data
-          if (countryData.length < 1) {
-            setCountryData(countryData.concat(response.data))
-          }
-        })    
-    } else {
-      setCountryData([])
-    }
-  }
+  }, [selectedCountry, name])
 
   const handleChange = (event) => {
     setName(event.target.value)
-    setCountry(event.target.value)
+    setSelectedCountry(null)
   }
-  console.log('countryData', countryData);
+
+  const handleShowCountry = (countryName) => {
+    setSelectedCountry(countryName)
+  }
+
   return (
     <>
       <form>
         Find countries
         <input value={name} onChange={handleChange} />
       </form>
-      <CountryList countryList={countryList} />
-      <CountryInformation countryData={countryData} />
-      </>
-      )
+      <CountryList countryList={filteredCountryList} onShowCountry={handleShowCountry} />
+    </>
+  )
 }
 
 export default App
+
+// function App() {
+//   const [name, setName] = useState('')
+//   const [countryList, setCountryList] = useState([])
+//   const [filteredCountryList, setFilteredCountryList] = useState([])
+//   const [country, setCountry] = useState(null)
+
+//   useEffect(() => {
+//     if (country) {
+//       axios
+//         .get('https://studies.cs.helsinki.fi/restcountries/api/all')
+//         .then(response => {
+//           const filteredCountries = Object.values(response.data).filter(country =>
+//             country.name.common.toLowerCase().startsWith(name.toLowerCase())
+//           );
+  
+//           setFilteredCountryList(prevFilteredCountryList => filteredCountries);
+//           setCountryList(filteredCountries);
+//         })
+//         .catch(error => console.error('Error fetching countries:', error));
+//     }
+//   }, [country, name])
+
+//   const handleChange = (event) => {
+//     setName(event.target.value)
+//     setCountry(event.target.value)
+//   }
+//   return (
+//     <>
+//       <form>
+//         Find countries
+//         <input value={name} onChange={handleChange} />
+//       </form>
+//       <CountryList countryList={countryList} country={country} />
+//       </>
+//       )
+// }
+
+// export default App
