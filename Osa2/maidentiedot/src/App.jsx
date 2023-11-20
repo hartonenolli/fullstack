@@ -51,7 +51,7 @@ function App() {
         .get('https://studies.cs.helsinki.fi/restcountries/api/all')
         .then(response => {
           const filteredCountries = Object.values(response.data).filter(country =>
-            country.name.common.toLowerCase().includes(name.toLowerCase())
+            country.name.common.toLowerCase().startsWith(name.toLowerCase())
           );
   
           setFilteredCountryList(prevFilteredCountryList => filteredCountries);
@@ -70,7 +70,9 @@ function App() {
         .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${countryList[0].name.common.toLowerCase()}`)
         .then(response => {
           // Make an array of the data
-          setCountryData(countryData.concat(response.data))
+          if (countryData.length < 1) {
+            setCountryData(countryData.concat(response.data))
+          }
         })    
     } else {
       setCountryData([])
@@ -81,7 +83,7 @@ function App() {
     setName(event.target.value)
     setCountry(event.target.value)
   }
-
+  console.log('countryData', countryData);
   return (
     <>
       <form>
