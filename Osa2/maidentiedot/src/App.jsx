@@ -3,6 +3,9 @@ import axios from 'axios'
 
 const FetchInformation = ({ selectedCountry, country }) => {
   const [countryData, setCountryData] = useState([])
+  const [weatherData, setWeatherData] = useState([])
+  const api_key = import.meta.env.VITE_SOME_KEY
+// muuttujassa api_key on nyt käynnistyksessä annettu API-avaimen arvo
   useEffect(() => {
     axios
       .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${selectedCountry}`)
@@ -12,14 +15,25 @@ const FetchInformation = ({ selectedCountry, country }) => {
           setCountryData(countryData.concat(response.data))
         }
       })
+    axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?q=${selectedCountry}&appid=${api_key}`)
+      .then(response => {
+        // Make an array of the data
+        if (weatherData.length < 1) {
+          setWeatherData(weatherData.concat(response.data))
+        }
+      })
   }, [country])
   return (
-    <CountryInformation countryData={countryData} />
+    <CountryInformation countryData={countryData} weatherData={weatherData} />
   )
 }
 
-const CountryInformation = ({ countryData }) => {
-  if (countryData.length === 1) {
+const CountryInformation = ({ countryData, weatherData }) => {
+  console.log('weatherData', weatherData);
+  if (countryData.length === 1 && weatherData.length === 1) {
+    const temperatureInCelsius = weatherData[0].main.temp - 273.15;
+
     return (
       <>
         <h2>{countryData[0].name.common}</h2>
@@ -32,6 +46,10 @@ const CountryInformation = ({ countryData }) => {
           ))}
         </ul>
         <img src={countryData[0].flags.png} alt="flag" width="200" />
+        <h3>Weather in {countryData[0].capital[0]}</h3>
+        <p>temperature: {temperatureInCelsius.toFixed(2)} Celsius</p>
+        <img src={`http://openweathermap.org/img/w/${weatherData[0].weather[0].icon}.png`} alt="weather icon" />
+        <p>wind: {weatherData[0].wind.speed} m/s</p>
       </>
     )
   }
