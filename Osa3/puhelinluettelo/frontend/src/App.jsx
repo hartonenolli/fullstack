@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import PersonsService from './services/persons'
-const baseUrl = '/api/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
