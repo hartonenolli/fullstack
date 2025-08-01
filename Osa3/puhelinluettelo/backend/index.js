@@ -11,7 +11,6 @@ app.use(express.static('dist'))
 app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = []
 
 Person.find({})
     .then(result => {
@@ -32,9 +31,14 @@ app.get('/info', (request, response) => {
     response.send(info + date)
 })
 
-app.get('/api/persons', (request, response) => {
-    response.json(persons);
+app.get('/api/persons', (request, response, next) => {
+  Person.find({})
+    .then(persons => {
+      response.json(persons)
+    })
+    .catch(error => next(error))
 })
+
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
