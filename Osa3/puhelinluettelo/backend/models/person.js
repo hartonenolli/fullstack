@@ -1,10 +1,5 @@
 const mongoose = require('mongoose')
 
-if (process.argv.length < 3) {
-  console.log('give password as an argument: node mongo.js <password>')
-  process.exit(1)
-}
-
 const url = process.env.MONGOD_URI
 
 mongoose.set('strictQuery', false)
