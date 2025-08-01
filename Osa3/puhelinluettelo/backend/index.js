@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 morgan('tiny')
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(express.json())
@@ -9,12 +11,16 @@ app.use(express.static('dist'))
 app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = [
-    { id: 1, name: 'Arto Hellas', number: '040-1234567' },
-    { id: 2, name: 'Ada Lovelace', number: '39-44-5323523' },
-    { id: 3, name: 'Dan Abramov', number: '12-43-234345' },
-    { id: 4, name: 'Mary Poppendieck', number: '39-23234345' }
-]
+let persons = []
+
+Person.find({})
+    .then(result => {
+        persons = result.map(person => person.toJSON())
+        console.log('Initial persons loaded from database:', persons)
+    })
+    .catch(error => {
+        console.error('Error loading persons from database:', error.message)
+    })
 
 app.get('/', (request, response) => {
     response.send('<h1>Puhelinluettelo!</h1>')
@@ -78,7 +84,7 @@ const personCheck = (newPerson) => {
     return null
 }
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
