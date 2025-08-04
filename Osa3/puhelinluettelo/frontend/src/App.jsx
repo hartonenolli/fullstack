@@ -30,6 +30,22 @@ const App = () => {
       name: newName,
       number: newNumber
     }
+    if (newName === '' || newNumber === '') {
+      setMessage('Name or number is missing')
+      setColorMessage('red')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+      return
+    }
+    if (newName.length < 3) {
+      setMessage('Name must be at least 3 characters long')
+      setColorMessage('red')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+      return
+    }
     if (names.includes(newName)) {
       const confirmUpdate = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
       if (confirmUpdate) {
