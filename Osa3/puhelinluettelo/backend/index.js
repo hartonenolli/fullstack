@@ -29,9 +29,16 @@ app.get('/', (request, response) => {
   })
 
 app.get('/info', (request, response) => {
-    const info = `<p>Phonebook has info for ${persons.length} people</p>`
-    const date = `<p>${new Date()}</p>`
-    response.send(info + date)
+    Person.find({})
+        .then(persons => {
+            const info = `<p>Phonebook has info for ${persons.length} people</p>`
+            const date = `<p>${new Date()}</p>`
+            response.send(info + date)
+        })
+        .catch(error => {
+            console.error('Error fetching persons:', error.message)
+            response.status(500).send({ error: 'Failed to fetch persons' })
+        })
 })
 
 app.get('/api/persons', (request, response, next) => {
