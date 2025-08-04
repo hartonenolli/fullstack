@@ -6,8 +6,8 @@ const cors = require('cors')
 const Person = require('./models/person')
 morgan('tiny')
 morgan.token('body', (req) => JSON.stringify(req.body))
-app.use(express.json())
 app.use(express.static('dist'))
+app.use(express.json())
 app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
@@ -75,12 +75,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-// app.delete('/api/persons/:id', (request, response) => {
-//     const id = Number(request.params.id)
-//     persons = persons.filter(p => p.id !== id)
-//     response.status(204).end()
-// })
-
 app.post('/api/persons', (request, response, next) => {
     const body = request.body
     if (!body.name || !body.number) {
@@ -99,37 +93,23 @@ app.post('/api/persons', (request, response, next) => {
         })
 })
 
-// app.post('/api/persons', (request, response) => {
-//     const body = request.body
-//     console.log('Received body:', body);
-//     const generateId = () => {
-//         return randomID = Math.floor(Math.random() * 10000)
-//     }
-//     const newPerson = {
-//         id: generateId(),
-//         name: body.name,
-//         number: body.number
-//     }
-//     if (personCheck(newPerson)) {
-//         return response.status(400).json(personCheck(newPerson))
-//     }
-//     console.log('Adding new person:', newPerson);
-//     console.log('Current persons:', persons);
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
 
-//     persons = persons.concat(newPerson)
-//     response.json(newPerson)
-// })
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
 
-// const personCheck = (newPerson) => {
-//     const existingPerson = persons.find(p => p.name === newPerson.name)
-//     if (existingPerson) {
-//         return { error: 'Name must be unique' }
-//     }
-//     if (!newPerson.name || !newPerson.number) {
-//         return { error: 'Name or number is missing' }
-//     }
-//     return null
-// }
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
+
+    next(error)
+}
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
