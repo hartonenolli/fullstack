@@ -12,6 +12,8 @@ app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 
+let persons = []
+
 Person.find({})
     .then(result => {
         persons = result.map(person => person.toJSON())
@@ -39,16 +41,28 @@ app.get('/api/persons', (request, response, next) => {
     .catch(error => next(error))
 })
 
-
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).end()
-    }
+app.get('api/persons/:id', (request, response, next) => {
+    const id = request.params.id
+    Person.findById(id)
+        .then(person => {
+            if (person) {
+                response.json(person.toJSON())
+            } else {
+                response.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
+
+// app.get('/api/persons/:id', (request, response) => {
+//     const id = Number(request.params.id)
+//     const person = persons.find(p => p.id === id)
+//     if (person) {
+//         response.json(person)
+//     } else {
+//         response.status(404).end()
+//     }
+// })
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -56,37 +70,55 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
-    console.log('Received body:', body);
-    const generateId = () => {
-        return randomID = Math.floor(Math.random() * 10000)
+    if (!body.name || !body.number) {
+        return response.status(400).json({ error: 'Name or number is missing' })
     }
-    const newPerson = {
-        id: generateId(),
+    const newPerson = new Person({
         name: body.name,
         number: body.number
-    }
-    if (personCheck(newPerson)) {
-        return response.status(400).json(personCheck(newPerson))
-    }
-    console.log('Adding new person:', newPerson);
-    console.log('Current persons:', persons);
-
-    persons = persons.concat(newPerson)
-    response.json(newPerson)
+    })
+    newPerson.save()
+        .then(savedPerson => {
+            response.json(savedPerson.toJSON())
+        })
+        .catch(error => {
+            next(error)
+        })
 })
 
-const personCheck = (newPerson) => {
-    const existingPerson = persons.find(p => p.name === newPerson.name)
-    if (existingPerson) {
-        return { error: 'Name must be unique' }
-    }
-    if (!newPerson.name || !newPerson.number) {
-        return { error: 'Name or number is missing' }
-    }
-    return null
-}
+// app.post('/api/persons', (request, response) => {
+//     const body = request.body
+//     console.log('Received body:', body);
+//     const generateId = () => {
+//         return randomID = Math.floor(Math.random() * 10000)
+//     }
+//     const newPerson = {
+//         id: generateId(),
+//         name: body.name,
+//         number: body.number
+//     }
+//     if (personCheck(newPerson)) {
+//         return response.status(400).json(personCheck(newPerson))
+//     }
+//     console.log('Adding new person:', newPerson);
+//     console.log('Current persons:', persons);
+
+//     persons = persons.concat(newPerson)
+//     response.json(newPerson)
+// })
+
+// const personCheck = (newPerson) => {
+//     const existingPerson = persons.find(p => p.name === newPerson.name)
+//     if (existingPerson) {
+//         return { error: 'Name must be unique' }
+//     }
+//     if (!newPerson.name || !newPerson.number) {
+//         return { error: 'Name or number is missing' }
+//     }
+//     return null
+// }
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
