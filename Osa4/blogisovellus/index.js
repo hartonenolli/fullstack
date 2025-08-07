@@ -1,6 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
-require('dotenv').config()
+const logger = require('./utils/logger')
+const { MONGODB_URI, PORT } = require('./utils/config')
+
+logger.info('Connecting to MongoDB...')
+logger.info(`MongoDB URI: ${MONGODB_URI}`)
+logger.error('This is an error message for testing purposes.')
 
 const app = express()
 
@@ -36,7 +41,6 @@ app.post('/api/blogs', (request, response) => {
   })
 })
 
-const PORT = 3003
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
