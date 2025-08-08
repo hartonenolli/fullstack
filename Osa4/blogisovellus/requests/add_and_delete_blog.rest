@@ -1,0 +1,15 @@
+### Add a new blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Test Blog",
+    "author": "Test Author",
+    "url": "http://example.com/test-blog",
+    "likes": 0
+}
+
+### Delete the blog
+
+
+DELETE http://localhost:3003/api/blogs/6895eab22fccb12123458fe2
