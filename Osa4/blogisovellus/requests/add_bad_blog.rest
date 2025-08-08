@@ -1,0 +1,19 @@
+### Test: Add blog with missing 'title' field (bad input)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "author": "No Title Author",
+    "url": "http://example.com/bad-blog-post",
+    "likes": 1
+}
+
+### Test: Add blog with missing 'url' field (bad input)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Missing URL Blog",
+    "author": "No URL Author",
+    "likes": 1
+}
