@@ -51,3 +51,19 @@ test('POST /api/blogs creates a new blog', async () => {
     const titles = blogsAtEnd.body.map(blog => blog.title)
     assert.ok(titles.includes(newBlog.title), 'New blog title not found in the list of blogs')
 })
+
+test('POST /api/blogs without likes defaults to 0', async () => {
+    const newBlog = {
+        title: 'No Likes Blog',
+        author: 'No Likes Author',
+        url: 'https://example.com/no-likes'
+    }
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    // console.log('response.body:', response.body);
+    assert.strictEqual(response.body.likes, 0)
+})
