@@ -32,3 +32,22 @@ test('Blog has key value named id', async () => {
     assert.ok(blog.id, 'Blog does not have id field')
   })
 })
+
+test('POST /api/blogs creates a new blog', async () => {
+    const newBlog = {
+        title: 'Bew Nlog',
+        author: 'Dohn Joe',
+        url: 'https://example.com/bew-nlog'
+    }
+
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await api.get('/api/blogs')
+    assert.strictEqual(blogsAtEnd.body.length, testBlogs.length + 1)
+    const titles = blogsAtEnd.body.map(blog => blog.title)
+    assert.ok(titles.includes(newBlog.title), 'New blog title not found in the list of blogs')
+})
