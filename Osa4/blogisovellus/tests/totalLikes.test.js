@@ -1,6 +1,7 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
+const { testBlogs } = require('./test_helper')
 
 describe('total likes', () => {
   const listWithOneBlog = [
@@ -25,7 +26,7 @@ describe('total likes', () => {
   })
 
   test('of a bigger list is calculated right', () => {
-    const result = listHelper.totalLikes(listHelper.testBlogs)
+    const result = listHelper.totalLikes(testBlogs)
     assert.strictEqual(result, 36)
   })
 })
