@@ -24,3 +24,11 @@ test('GET /api/blogs returns blogs as json and correct amount of blogs', async (
 after(async () => {
   await mongoose.connection.close()
 })
+
+test('Blog has key value named id', async () => {
+  const response = await api.get('/api/blogs')
+  //console.log('response.body:', response.body);
+  response.body.forEach(blog => {
+    assert.ok(blog.id, 'Blog does not have id field')
+  })
+})
