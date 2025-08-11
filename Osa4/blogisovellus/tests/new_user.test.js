@@ -40,7 +40,7 @@ describe('When there are two initial users', () => {
         const usernames = usersAtEnd.map(user => user.username)
         assert.ok(usernames.includes(newUser.username), 'New user username not found in the list of users')
     })
-    test('creation fails with unvalid inputs', async () => {
+    test('creation fails with invalid inputs', async () => {
         const badUser1 = {
             username: null,
             name: "No Username",
@@ -50,6 +50,11 @@ describe('When there are two initial users', () => {
             username: "NoPassword",
             name: "No Password",
             password: null
+        }
+        const badUser3 = {
+            username: "sh",
+            name: "Short Username",
+            password: "sh"
         }
 
         const response = await api
@@ -62,7 +67,25 @@ describe('When there are two initial users', () => {
         .send(badUser2)
         .expect(401)
         .expect('Content-Type', /application\/json/)
+        const response3 = await api
+        .post('/api/users')
+        .send(badUser3)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+    })
+    test('creation fails with username, that already exists', async () => {
+        newUser = {
+            username: testUsers[0].username,
+            name: testUsers[0].name,
+            password: testUsers[0].passwordHash
+        }
+        console.log('newUser', newUser);
 
+        const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        console.log('response status', response.status);
     })
     after(async () => {
         await mongoose.connection.close()
