@@ -1,9 +1,12 @@
 const bcrypt = require('bcrypt')
 const userRouter = require('express').Router()
-const User = require('../models/users')
+const User = require('../models/user')
 
 userRouter.post('/', async (request, response) => {
     const { username, name, password } = request.body
+    if (!(username && password)) {
+        return response.status(401).json({ error: 'Username and password are required' })
+    }
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
 
