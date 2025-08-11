@@ -1,3 +1,7 @@
+GET http://localhost:3003/api/users
+
+###
+
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
@@ -5,5 +9,6 @@ Content-Type: application/json
   "title": "New Blog Post",
   "author": "John Doe",
   "url": "http://example.com/new-blog-post",
-  "likes": 0
+  "likes": 0,
+  "userId": "6899c2d994426cecc0154d5e"
 }

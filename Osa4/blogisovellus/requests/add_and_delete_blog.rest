@@ -1,3 +1,5 @@
+GET http://localhost:3003/api/users
+
 ### Add a new blog
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
@@ -9,7 +11,12 @@ Content-Type: application/json
     "likes": 0
 }
 
+### Get all blogs
+GET http://localhost:3003/api/blogs
+
 ### Delete the blog
 
+DELETE http://localhost:3003/api/blogs/6899d7913ac325c4a42acd4d
 
-DELETE http://localhost:3003/api/blogs/6895eab22fccb12123458fe2
+### Get all blogs
+GET http://localhost:3003/api/blogs

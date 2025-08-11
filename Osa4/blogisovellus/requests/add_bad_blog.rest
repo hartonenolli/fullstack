@@ -17,3 +17,15 @@ Content-Type: application/json
     "author": "No URL Author",
     "likes": 1
 }
+
+### Test: Add blog with non-existent userId (bad input)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Non-existent User Blog",
+    "author": "Unknown Author",
+    "url": "http://example.com/non-existent-user-blog",
+    "likes": 1,
+    "userId": "THISISNOTVALIDUSERID"
+}

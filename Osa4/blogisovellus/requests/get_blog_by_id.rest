@@ -1,7 +1,11 @@
-GET http://localhost:3003/api/blogs/689457eab43b444498a00d89
+GET http://localhost:3003/api/blogs
+
+### Get a blog by ID
+
+GET http://localhost:3003/api/blogs/6899c839659e9730ac6c4fd3
 
 ###
-PUT http://localhost:3003/api/blogs/689457eab43b444498a00d89
+PUT http://localhost:3003/api/blogs/6899c839659e9730ac6c4fd3
 Content-Type: application/json
 
 {
@@ -9,7 +13,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:3003/api/blogs/689457eab43b444498a00d89
+PUT http://localhost:3003/api/blogs/6899c839659e9730ac6c4fd3
 Content-Type: application/json
 
 {
