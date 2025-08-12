@@ -39,6 +39,16 @@ describe('Blog API tests', () => {
   })
 
   test('POST /api/blogs creates a new blog', async () => {
+      // First, log in to get a token
+      const loginResponse = await api
+        .post('/api/login')
+        .send({ username: testUsers[0].username, password: 'hashedpassword1' })
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      const token = loginResponse.body.token
+      // console.log('token:', token);
+
       const newBlog = {
           title: 'Bew Nlog',
           author: 'Dohn Joe',
@@ -47,6 +57,7 @@ describe('Blog API tests', () => {
 
       const response = await api
           .post('/api/blogs')
+          .set('Authorization', `Bearer ${token}`)
           .send(newBlog)
           .expect(201)
           .expect('Content-Type', /application\/json/)
@@ -58,6 +69,13 @@ describe('Blog API tests', () => {
   })
 
   test('POST /api/blogs without likes defaults to 0', async () => {
+      const loginResponse = await api
+        .post('/api/login')
+        .send({ username: testUsers[0].username, password: 'hashedpassword1' })
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      const token = loginResponse.body.token
       const newBlog = {
           title: 'No Likes Blog',
           author: 'No Likes Author',
@@ -65,6 +83,7 @@ describe('Blog API tests', () => {
       }
       const response = await api
           .post('/api/blogs')
+          .set('Authorization', `Bearer ${token}`)
           .send(newBlog)
           .expect(201)
           .expect('Content-Type', /application\/json/)
@@ -79,7 +98,7 @@ describe('Blog API tests', () => {
           assert.strictEqual(response.status, 200)
           assert.strictEqual(Array.isArray(users), true)
           assert.strictEqual(users.length, 2)
-          console.log('users', users);
+          // console.log('users', users);
       })
       test('creation succeeds with a fresh username', async () => {
           const newUser = {
@@ -138,13 +157,13 @@ describe('Blog API tests', () => {
               name: testUsers[0].name,
               password: testUsers[0].passwordHash
           }
-          console.log('newUser', newUser);
-  
+          // console.log('newUser', newUser);
+
           const response = await api
           .post('/api/users')
           .send(newUser)
           .expect(400)
-          console.log('response status', response.status);
+          // console.log('response status', response.status);
       })
   after(async () => {
       await mongoose.connection.close()

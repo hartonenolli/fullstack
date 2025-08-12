@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 const usersInDb = async () => {
     const users = await User.find({})
@@ -9,12 +10,12 @@ const testUsers = [
     {
         username: "user1",
         name: "User One",
-        passwordHash: "hashedpassword1"
+        passwordHash: bcrypt.hashSync("hashedpassword1", 10)
     },
     {
         username: "user2",
         name: "User Two",
-        passwordHash: "hashedpassword2"
+        passwordHash: bcrypt.hashSync("hashedpassword2", 10)
     }
 ]
 
