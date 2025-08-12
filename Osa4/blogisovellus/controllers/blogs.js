@@ -26,22 +26,12 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response, next) => {
     const body = request.body
-    let user = await User.findById(body.userId)
-    console.log('Received POST request with body:', body);
+    const user = await User.findOne({})
 
     if (!body.title || !body.url) {
         const err = new Error('Title and URL are required fields')
         err.name = 'ValidationError'
         return next(err)
-    }
-    if (!user) {
-        const firstUser = await User.findOne({})
-        if (!firstUser) {
-            const err = new Error('No users found in the database')
-            err.name = 'ValidationError'
-            return next(err)
-        }
-        user = firstUser
     }
 
     try {
@@ -54,7 +44,6 @@ blogsRouter.post('/', async (request, response, next) => {
         })
         const savedBlog = await blog.save()
         user.blogs = user.blogs.concat(savedBlog._id)
-        await user.save()
         response.status(201).json(savedBlog)
     } catch (exception) {
         next(exception)
