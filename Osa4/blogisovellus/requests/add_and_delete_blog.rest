@@ -17,7 +17,7 @@ GET http://localhost:3003/api/blogs
 
 ### Delete the blog
 
-DELETE http://localhost:3003/api/blogs/689afc9ec4da573bbc298946
+DELETE http://localhost:3003/api/blogs/689b0d47712b4ad7e00607ad
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIzIiwiaWQiOiI2ODk5Y2ZjZWRmNWY4YzkxYjQ5ZDVkMmUiLCJpYXQiOjE3NTQ5ODc1ODR9.ob4O67C6OO6ZGn3Er15EoYNEgz0q46SivySoo8vH-mQ
 
 
