@@ -12,7 +12,8 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [colorMessage, setColorMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,9 +42,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
+      setMessage('wrong username or password')
+      setColorMessage('red')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
   }
@@ -65,6 +67,12 @@ const App = () => {
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
+        setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+        setColorMessage('green')
+        setTimeout(() => {
+          setMessage(null)
+          setColorMessage('')
+        }, 5000)
       })
   }
 
@@ -145,7 +153,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage} />
+      <Notification message={message} colorMessage={colorMessage} />
       {!user && loginForm()}
       {user && <div>
         <p>{user.name} logged in
