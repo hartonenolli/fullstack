@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -16,6 +16,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [colorMessage, setColorMessage] = useState('')
+  const togglableRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -69,6 +70,7 @@ const App = () => {
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
+        togglableRef.current.toggleVisibility()
         setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
         setColorMessage('green')
         setTimeout(() => {
@@ -126,7 +128,7 @@ const App = () => {
         <p>{user.name} logged in
           <button onClick={handleLogout}>logout</button>
         </p>
-        <Togglable buttonLabel="new blog">
+        <Togglable buttonLabel="new blog" ref={togglableRef}>
           <BlogForm
             newTitle={newTitle}
             setNewTitle={setNewTitle}
