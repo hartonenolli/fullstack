@@ -10,9 +10,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [colorMessage, setColorMessage] = useState('')
@@ -53,29 +50,22 @@ const App = () => {
     }
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
-    // console.log('Button pressed');
-    // console.log('title:', title);
-    // console.log('author', author);
-    // console.log('url', url);
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
+  const addBlog = async (blogObject) => {
     blogService.create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
-        togglableRef.current.toggleVisibility()
         setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
         setColorMessage('green')
         setTimeout(() => {
           setMessage(null)
-          setColorMessage('')
+        }, 5000)
+        togglableRef.current.toggleVisibility()
+      })
+      .catch(error => {
+        setMessage('error creating blog')
+        setColorMessage('red')
+        setTimeout(() => {
+          setMessage(null)
         }, 5000)
       })
   }
@@ -130,13 +120,7 @@ const App = () => {
         </p>
         <Togglable buttonLabel="new blog" ref={togglableRef}>
           <BlogForm
-            newTitle={newTitle}
-            setNewTitle={setNewTitle}
-            newAuthor={newAuthor}
-            setNewAuthor={setNewAuthor}
-            newUrl={newUrl}
-            setNewUrl={setNewUrl}
-            handleNewBlog={handleNewBlog}
+            createBlog={addBlog}
           />
         </Togglable>
         {blogForm()}
