@@ -8,6 +8,9 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -45,6 +48,26 @@ const App = () => {
     }
   }
 
+  const handleNewBlog = async (event) => {
+    event.preventDefault()
+    // console.log('Button pressed');
+    // console.log('title:', title);
+    // console.log('author', author);
+    // console.log('url', url);
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl
+    }
+    blogService.create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setNewTitle('')
+        setNewAuthor('')
+        setNewUrl('')
+      })
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -69,9 +92,44 @@ const App = () => {
     </form>
   )
 
+  const makeNewBlogForm = () => (
+    <form onSubmit={handleNewBlog}>
+    <div>
+      <h2>Create New Blog</h2>
+    </div>
+      <div>
+        title
+        <input
+          type="text"
+          value={newTitle}
+          name="Title"
+          onChange={({ target }) => setNewTitle(target.value)}
+        />
+      </div>
+      <div>
+        author
+        <input
+          type="text"
+          value={newAuthor}
+          name="Author"
+          onChange={({ target }) => setNewAuthor(target.value)}
+        />
+      </div>
+      <div>
+        url
+        <input
+          type="text"
+          value={newUrl}
+          name="Url"
+          onChange={({ target }) => setNewUrl(target.value)}
+        />
+      </div>
+      <button type="submit">create</button>
+    </form>
+  )
+
   const blogForm = () => (
     <div>
-      <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
@@ -93,6 +151,7 @@ const App = () => {
         <p>{user.name} logged in
           <button onClick={handleLogout}>logout</button>
         </p>
+        {makeNewBlogForm()}
         {blogForm()}
       </div>}
     </div>
