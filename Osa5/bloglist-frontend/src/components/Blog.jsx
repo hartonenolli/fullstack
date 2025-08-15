@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const [blogsVisible, setBlogsVisible] = useState(false)
   const [buttonLabel, setButtonLabel] = useState('view')
+  const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
+
   const handleToggleVisibility = () => {
     setBlogsVisible(!blogsVisible)
     setButtonLabel(blogsVisible ? 'view' : 'hide')
@@ -40,6 +42,18 @@ const Blog = ({ blog }) => {
       })
   }
 
+  const handleDelete = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      blogService.deleteBlog(blog.id)
+        .then(() => {
+          console.log(`Blog ${blog.title} deleted`)
+        })
+        .catch(error => {
+          console.error('Error deleting blog:', error)
+        })
+    }
+  }
+
   return (
     <form>
     <div style={blogStyle}>
@@ -53,6 +67,9 @@ const Blog = ({ blog }) => {
         <button type="button" onClick={handleLike}>like</button>
         </p>
         <p>{blog.user.name}</p>
+        {user && user.username === blog.user.username && (
+          <button type="button" onClick={handleDelete}>remove</button>
+        )}
       </div>
     </div>
     </form>
