@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog }) => {
   const [blogsVisible, setBlogsVisible] = useState(false)
   const [buttonLabel, setButtonLabel] = useState('view')
   const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
+
+  Blog.propTypes = {
+    blog: PropTypes.object.isRequired
+  }
 
   const handleToggleVisibility = () => {
     setBlogsVisible(!blogsVisible)
@@ -56,22 +61,22 @@ const Blog = ({ blog }) => {
 
   return (
     <form>
-    <div style={blogStyle}>
-      <div> 
-        {blog.title} {blog.author}
-        <button type="button" onClick={handleView}>{buttonLabel}</button>
+      <div style={blogStyle}>
+        <div>
+          {blog.title} {blog.author}
+          <button type="button" onClick={handleView}>{buttonLabel}</button>
+        </div>
+        <div style={{ display: blogsVisible ? '' : 'none' }}>
+          <p>{blog.url}</p>
+          <p>likes {blog.likes}
+            <button type="button" onClick={handleLike}>like</button>
+          </p>
+          <p>{blog.user.name}</p>
+          {user && user.username === blog.user.username && (
+            <button type="button" onClick={handleDelete}>remove</button>
+          )}
+        </div>
       </div>
-      <div style={{ display: blogsVisible ? '' : 'none' }}>
-        <p>{blog.url}</p>
-        <p>likes {blog.likes}
-        <button type="button" onClick={handleLike}>like</button>
-        </p>
-        <p>{blog.user.name}</p>
-        {user && user.username === blog.user.username && (
-          <button type="button" onClick={handleDelete}>remove</button>
-        )}
-      </div>
-    </div>
     </form>
   )
 }
