@@ -25,4 +25,12 @@ const getById = async (id) => {
   return response.data
 }
 
-export default { getAll, setToken, create, getById }
+const like = async (id, updatedObject) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.put(`${baseUrl}/${id}`, updatedObject, config)
+  return response.data
+}
+
+export default { getAll, setToken, create, getById, like }

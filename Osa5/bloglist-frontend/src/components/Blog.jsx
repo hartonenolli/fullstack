@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
@@ -26,6 +26,20 @@ const Blog = ({ blog }) => {
       })
   }
 
+  const handleLike = () => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+    blogService.like(blog.id, updatedBlog)
+      .then(returnedBlog => {
+        console.log('Blog liked:', returnedBlog)
+      })
+      .catch(error => {
+        console.error('Error liking blog:', error)
+      })
+  }
+
   return (
     <form>
     <div style={blogStyle}>
@@ -36,7 +50,7 @@ const Blog = ({ blog }) => {
       <div style={{ display: blogsVisible ? '' : 'none' }}>
         <p>{blog.url}</p>
         <p>likes {blog.likes}
-        <button type="button" >like</button>
+        <button type="button" onClick={handleLike}>like</button>
         </p>
         <p>{blog.user.name}</p>
       </div>
