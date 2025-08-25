@@ -38,6 +38,19 @@ describe('Blog', () => {
     expect(usernameElement).toBeInTheDocument() // User name should be visible after clicking view
     expect(urlElement).toBeInTheDocument() // URL should be visible after clicking view
     expect(likesElement).toBeInTheDocument() // Likes should be visible after clicking view
+  })
 
+  test('calls event handler twice when like button is clicked twice', async () => {
+    const mockHandler = vi.fn()
+    render(<Blog blog={blog} handleLike={mockHandler} />)
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler).toHaveBeenCalledTimes(2)
   })
 })
