@@ -23,9 +23,9 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       <div style={blogStyle}>
         <div>
           {blog.title}
-      <button type="button" onClick={() => setShowDetails(!showDetails)}>
-        {showDetails ? 'hide' : 'view'}
-      </button>
+          <button type="button" onClick={() => setShowDetails(!showDetails)}>
+            {showDetails ? 'hide' : 'view'}
+          </button>
         </div>
         {showDetails && (
           <div>
