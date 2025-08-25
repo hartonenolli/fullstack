@@ -29,6 +29,7 @@ const BlogForm = ({ createBlog }) => {
           value={newTitle}
           name="Title"
           aria-label='title'
+          placeholder='title'
           onChange={({ target }) => setNewTitle(target.value)}
         />
       </div>
@@ -39,6 +40,7 @@ const BlogForm = ({ createBlog }) => {
           value={newAuthor}
           name="Author"
           aria-label='author'
+          placeholder='author'
           onChange={({ target }) => setNewAuthor(target.value)}
         />
       </div>
@@ -49,6 +51,7 @@ const BlogForm = ({ createBlog }) => {
           value={newUrl}
           name="Url"
           aria-label='url'
+          placeholder='url'
           onChange={({ target }) => setNewUrl(target.value)}
         />
       </div>

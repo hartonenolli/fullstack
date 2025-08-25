@@ -38,3 +38,29 @@ describe('Blog app', () => {
     await expect(page.getByText('wrong username or password')).toHaveCSS('border-style', 'solid')
   })
 })
+
+describe('When logged in', () => {
+  beforeEach(async ({ page, request }) => {
+    await request.post('http://localhost:3003/api/testing/reset')
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        name: 'Borje Blogipoika',
+        username: 'Borje',
+        password: 'borje123'
+      }
+    })
+    await page.goto('http://localhost:5173')
+    await page.getByPlaceholder('username').fill('Borje')
+    await page.getByPlaceholder('password').fill('borje123')
+    await page.getByRole('button', { name: 'login' }).click()
+    await expect(page.getByText('Borje Blogipoika logged in')).toBeVisible()
+  })
+  test('a blog can be created', async ({ page }) => {
+    await page.getByRole('button', { name: 'new blog' }).click()
+    await page.getByPlaceholder('title').fill('Jankku Jussin tarina')
+    await page.getByPlaceholder('author').fill('Jankku Jussi')
+    await page.getByPlaceholder('url').fill('www.jankkujussi.com')
+    await page.getByRole('button', { name: 'create' }).click()
+    await expect(page.getByText('a new blog Jankku Jussin tarina by Jankku Jussi added')).toBeVisible()
+  })
+})
