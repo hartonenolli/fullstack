@@ -24,7 +24,7 @@ describe('Blog', () => {
     expect(urlElement).not.toBeInTheDocument() // URL should not be visible initially
     expect(likesElement).not.toBeInTheDocument() // Likes should not be visible
 
-    screen.debug() // This will log the current state of the DOM
+    // screen.debug() // This will log the current state of the DOM
   })
 
   test('shows url and likes when view button is clicked', async () => {
