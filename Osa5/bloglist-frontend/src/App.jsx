@@ -53,7 +53,12 @@ const App = () => {
   const addBlog = async (blogObject) => {
     blogService.create(blogObject)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        // Ensure the returned blog has the user info for author and delete button
+        const blogWithUser = {
+          ...returnedBlog,
+          user: user // attach current user to the blog
+        }
+        setBlogs(blogs.concat(blogWithUser))
         setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
         setColorMessage('green')
         setTimeout(() => {
