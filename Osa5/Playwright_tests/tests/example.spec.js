@@ -91,4 +91,28 @@ describe('When logged in', () => {
     await blog.getByRole('button', { name: 'remove' }).click()
     await expect(page.locator('.blog', { hasText: 'Jankku Jussin tarina' })).toHaveCount(0)
   })
+  test('only person who created the blog can see delete button', async ({ page, request }) => {
+    await page.getByRole('button', { name: 'new blog' }).click()
+    await page.getByPlaceholder('title').fill('Jankku Jussin tarina')
+    await page.getByPlaceholder('author').fill('Jankku Jussi')
+    await page.getByPlaceholder('url').fill('www.jankkujussi.com')
+    await page.getByRole('button', { name: 'create' }).click()
+    await expect(page.getByText('a new blog Jankku Jussin tarina by Jankku Jussi added')).toBeVisible()
+    await request.post('http://localhost:3003/api/users', {
+      data: {
+        name: 'Matti Meikäläinen',
+        username: 'Matti',
+        password: 'matti123'
+      }
+    })
+    await page.getByRole('button', { name: 'logout' }).click()
+    await expect(page.getByRole('button', { name: 'login' })).toBeVisible()
+    await page.getByPlaceholder('username').fill('Matti')
+    await page.getByPlaceholder('password').fill('matti123')
+    await page.getByRole('button', { name: 'login' }).click()
+    await expect(page.getByText('Matti Meikäläinen logged in')).toBeVisible()
+    const blog = page.locator('.blog', { hasText: 'Jankku Jussin tarina' })
+    await blog.getByRole('button', { name: 'view' }).click()
+    await expect(blog.getByRole('button', { name: 'remove' })).toHaveCount(0)
+  })
 })
