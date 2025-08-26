@@ -25,7 +25,7 @@ describe('Blog app', () => {
     await page.getByPlaceholder('username').fill('Borje')
     await page.getByPlaceholder('password').fill('borje123')
     await page.getByRole('button', { name: 'login' }).click()
-    await expect(page.getByText('Borje Blogipoika logged in')).toBeVisible()
+    await expect(page.getByText(/Borje Blogipoika logged in/)).toBeVisible()
   })
   test('login fails with wrong password', async ({ page }) => {
     await page.getByPlaceholder('username').fill('Borje')
@@ -62,5 +62,7 @@ describe('When logged in', () => {
     await page.getByPlaceholder('url').fill('www.jankkujussi.com')
     await page.getByRole('button', { name: 'create' }).click()
     await expect(page.getByText('a new blog Jankku Jussin tarina by Jankku Jussi added')).toBeVisible()
+    await expect(page.locator('.blog', { hasText: 'Jankku Jussin tarina' })).toBeVisible()
+
   })
 })

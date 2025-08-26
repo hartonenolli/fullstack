@@ -20,7 +20,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
 
   return (
     <form>
-      <div style={blogStyle}>
+      <div style={blogStyle} className='blog'>
         <div>
           {blog.title}
           <button type="button" onClick={() => setShowDetails(!showDetails)}>
