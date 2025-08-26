@@ -63,6 +63,17 @@ describe('When logged in', () => {
     await page.getByRole('button', { name: 'create' }).click()
     await expect(page.getByText('a new blog Jankku Jussin tarina by Jankku Jussi added')).toBeVisible()
     await expect(page.locator('.blog', { hasText: 'Jankku Jussin tarina' })).toBeVisible()
-
+  })
+  test('a blog can be liked', async ({ page }) => {
+    await page.getByRole('button', { name: 'new blog' }).click()
+    await page.getByPlaceholder('title').fill('Jankku Jussin tarina')
+    await page.getByPlaceholder('author').fill('Jankku Jussi')
+    await page.getByPlaceholder('url').fill('www.jankkujussi.com')
+    await page.getByRole('button', { name: 'create' }).click()
+    await expect(page.getByText('a new blog Jankku Jussin tarina by Jankku Jussi added')).toBeVisible()
+    const blog = page.locator('.blog', { hasText: 'Jankku Jussin tarina' })
+    await blog.getByRole('button', { name: 'view' }).click()
+    await blog.getByRole('button', { name: 'like' }).click()
+    await expect(blog).toContainText('likes 1')
   })
 })
