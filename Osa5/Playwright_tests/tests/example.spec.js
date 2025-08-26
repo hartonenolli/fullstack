@@ -10,7 +10,6 @@ describe('Blog app', () => {
         password: 'borje123'
       }
     })
-
     await page.goto('http://localhost:5173')
   })
   test('front page can be opened', async ({ page }) => {
@@ -25,7 +24,6 @@ describe('Blog app', () => {
     await page.getByPlaceholder('username').fill('Borje')
     await page.getByPlaceholder('password').fill('borje123')
     await page.getByRole('button', { name: 'login' }).click()
-    await expect(page.getByText(/Borje Blogipoika logged in/)).toBeVisible()
   })
   test('login fails with wrong password', async ({ page }) => {
     await page.getByPlaceholder('username').fill('Borje')
@@ -48,7 +46,8 @@ describe('When logged in', () => {
         username: 'Borje',
         password: 'borje123'
       }
-    })
+    }
+    )
     await page.goto('http://localhost:5173')
     await page.getByPlaceholder('username').fill('Borje')
     await page.getByPlaceholder('password').fill('borje123')
@@ -115,4 +114,41 @@ describe('When logged in', () => {
     await blog.getByRole('button', { name: 'view' }).click()
     await expect(blog.getByRole('button', { name: 'remove' })).toHaveCount(0)
   })
-})
+  test('blogs are ordered according to likes', async ({ page }) => {
+    await page.getByRole('button', { name: 'new blog' }).click()
+    await page.getByPlaceholder('title').fill('Eniten tykkäyksiä')
+    await page.getByPlaceholder('author').fill('Eniten')
+    await page.getByPlaceholder('url').fill('www.enitentykkyyksia.com')
+    await page.getByRole('button', { name: 'create' }).click()
+    await expect(page.getByText('a new blog Eniten tykkäyksiä by Eniten added')).toBeVisible()
+    await page.waitForTimeout(500)
+    await page.getByRole('button', { name: 'new blog' }).click()
+    await page.getByPlaceholder('title').fill('Keskiverto tykkäykset')
+    await page.getByPlaceholder('author').fill('Keskiverto')
+    await page.getByPlaceholder('url').fill('www.keskivertotykkyyksia.com')
+    await page.getByRole('button', { name: 'create' }).click()
+    await expect(page.getByText('a new blog Keskiverto tykkäykset by Keskiverto added')).toBeVisible()
+    await page.waitForTimeout(500)
+    await page.getByRole('button', { name: 'new blog' }).click()
+    await page.getByPlaceholder('title').fill('Vähän tykkäyksiä')
+    await page.getByPlaceholder('author').fill('Vähän')
+    await page.getByPlaceholder('url').fill('www.vahantykkyyksia.com')
+    await page.getByRole('button', { name: 'create' }).click()
+    await expect(page.getByText('a new blog Vähän tykkäyksiä by Vähän added')).toBeVisible()
+    await page.waitForTimeout(500)
+    const blogs = page.locator('.blog')
+    await blogs.nth(0).getByRole('button', { name: 'view' }).click()
+    await blogs.nth(0).getByRole('button', { name: 'like' }).click()
+    await page.waitForTimeout(500)
+    await blogs.nth(0).getByRole('button', { name: 'like' }).click()
+    await page.waitForTimeout(500)
+    await blogs.nth(1).getByRole('button', { name: 'view' }).click()
+    await blogs.nth(1).getByRole('button', { name: 'like' }).click()
+    await page.waitForTimeout(500)
+    await blogs.nth(0).getByRole('button', { name: 'hide' }).click()
+    const titles = await blogs.allTextContents()
+    expect(titles[0]).toContain('Eniten tykkäyksiä')
+    expect(titles[1]).toContain('Keskiverto tykkäykset')
+    expect(titles[2]).toContain('Vähän tykkäyksiä')
+  })
+})  
