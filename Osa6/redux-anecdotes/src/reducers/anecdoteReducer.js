@@ -29,6 +29,9 @@ const reducer = (state = initialState, action) => {
           ? { ...anecdote, votes: anecdote.votes + 1 }
           : anecdote
       )
+    case 'ADD_ANECDOTE':
+      const newAnecdote = asObject(action.payload.content)
+      return [...state, newAnecdote]
     default:
       return state
   }
@@ -38,6 +41,13 @@ export const voteAnecdote = (id) => {
   return {
     type: 'VOTE',
     payload: { id }
+  }
+}
+
+export const addAnecdote = (content) => {
+  return {
+    type: 'ADD_ANECDOTE',
+    payload: { content }
   }
 }
 
