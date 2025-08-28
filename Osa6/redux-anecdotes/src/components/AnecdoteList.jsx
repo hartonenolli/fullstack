@@ -13,7 +13,16 @@ const Anecdote = ({ anecdote, handleVote }) => {
   );
 }
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state.anecdotes);
+  const filter = useSelector((state) => state.filter);
+  //console.log('filter:', filter);
+  const anecdotes = useSelector((state) => {
+    if (filter === '') {
+      return state.anecdotes;
+    }
+    return state.anecdotes.filter((anecdote) =>
+      anecdote.content.toLowerCase().includes(filter.toLowerCase())
+    );
+  });
   const dispatch = useDispatch();
   
   const handleVote = (id) => {
