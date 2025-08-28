@@ -13,9 +13,9 @@ const Anecdote = ({ anecdote, handleVote }) => {
   );
 }
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state);
+  const anecdotes = useSelector((state) => state.anecdotes);
   const dispatch = useDispatch();
-
+  
   const handleVote = (id) => {
     console.log("vote", id);
     dispatch(voteAnecdote(id));

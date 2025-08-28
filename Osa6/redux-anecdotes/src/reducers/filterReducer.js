@@ -1,7 +1,7 @@
 const filterReducer = (state = '', action) => {
   switch (action.type) {
     case 'SET_FILTER':
-      return action.payload;
+      return action.filter;
     default:
       return state;
   }
@@ -10,7 +10,7 @@ const filterReducer = (state = '', action) => {
 export const filterChange = (filter) => {
   return {
     type: 'SET_FILTER',
-    payload: filter
+    filter
   };
 };
 
