@@ -10,7 +10,7 @@ const getAll = async () => {
 const createNew = async (content) => {
     const object = {
         content,
-        votes
+        votes: 0
     }
     const response = await axios.post(baseUrl, object)
     return response.data
