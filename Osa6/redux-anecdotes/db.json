@@ -3,7 +3,7 @@
     {
       "id": "1",
       "content": "If it hurts, do it more often",
-      "votes": 3
+      "votes": 4
     },
     {
       "id": "2",
@@ -38,6 +38,11 @@
     {
       "id": "9dbf",
       "content": "Joskus tämä on kuin pään hakkaamista seinään.. mutta konsoliin loggaus on kypärä",
+      "votes": 1
+    },
+    {
+      "id": "35ce",
+      "content": "Kertaus on opintojen äiti.",
       "votes": 0
     }
   ]
