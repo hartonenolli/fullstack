@@ -2,8 +2,11 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getAnecdotes, createAnecdote, updateAnecdote } from './requests'
+import { useState } from 'react'
+import NotificationContext from './NotificationContext'
 
 const App = () => {
+  const [notification, setNotification] = useState(null)
   const queryClient = useQueryClient()
   const newMutation = useMutation({
     mutationFn: createAnecdote,
@@ -27,6 +30,7 @@ const updateAnecdoteMutation = useMutation({
 
 const handleVote = (anecdote) => {
   updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
+  setNotification(`Anecdote '${anecdote.content}' voted!`)
 }
 
 console.log(JSON.parse(JSON.stringify(result)));
@@ -41,11 +45,12 @@ if (result.error) {
 const anecdotes = result.data
 
   return (
-    <div>
-      <h3>Anecdote app</h3>
-    
-      <Notification />
-      <AnecdoteForm createAnecdote={newMutation.mutate} />
+    <NotificationContext.Provider value={[notification, setNotification]}>
+      <div>
+        <h3>Anecdote app</h3>
+
+        <Notification />
+        <AnecdoteForm createAnecdote={newMutation.mutate} />
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
@@ -58,7 +63,8 @@ const anecdotes = result.data
         </div>
       )}
     </div>
-  )
+  </NotificationContext.Provider>
+)
 }
 
 export default App

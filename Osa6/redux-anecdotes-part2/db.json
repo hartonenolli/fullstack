@@ -17,8 +17,8 @@
     },
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-      "id": "36975",
-      "votes": 0
+      "votes": 1,
+      "id": "36975"
     },
     {
       "content": "Premature optimization is the root of all evil.",
@@ -44,6 +44,16 @@
       "content": "Joskus tarvitsen auttavaa kättä!",
       "votes": 5,
       "id": "2hxD3mI"
+    },
+    {
+      "content": "Fullstack on haastavaa puuhaa..",
+      "votes": 0,
+      "id": "8O-yb_u"
+    },
+    {
+      "content": "Joskus minulla on pää pipi.",
+      "votes": 0,
+      "id": "XEuTWHm"
     }
   ]
 }
