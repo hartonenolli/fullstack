@@ -54,6 +54,11 @@
       "content": "Joskus minulla on pää pipi.",
       "votes": 0,
       "id": "XEuTWHm"
+    },
+    {
+      "content": "Tämä anecdootti on pidempi kuin 5 merkkiä.",
+      "votes": 1,
+      "id": "PuJAqHn"
     }
   ]
 }

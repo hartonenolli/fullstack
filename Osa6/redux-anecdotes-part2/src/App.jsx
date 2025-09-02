@@ -10,6 +10,9 @@ const App = () => {
   const queryClient = useQueryClient()
   const newMutation = useMutation({
     mutationFn: createAnecdote,
+    onError: (error) => {
+      setNotification(`Too short anecdote, must be at least 5 characters`)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['anecdotes'])
     }
