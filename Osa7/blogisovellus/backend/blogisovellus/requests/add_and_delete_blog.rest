@@ -1,0 +1,25 @@
+GET http://localhost:3003/api/users
+
+### Add a new blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIzIiwiaWQiOiI2ODk5Y2ZjZWRmNWY4YzkxYjQ5ZDVkMmUiLCJpYXQiOjE3NTQ5ODc1ODR9.ob4O67C6OO6ZGn3Er15EoYNEgz0q46SivySoo8vH-mQ
+
+{
+    "title": "3 to Blog or not to Blog",
+    "author": "New User 3",
+    "url": "http://example.com/test-blog",
+    "likes": 6
+}
+
+### Get all blogs
+GET http://localhost:3003/api/blogs
+
+### Delete the blog
+
+DELETE http://localhost:3003/api/blogs/689b0d47712b4ad7e00607ad
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIzIiwiaWQiOiI2ODk5Y2ZjZWRmNWY4YzkxYjQ5ZDVkMmUiLCJpYXQiOjE3NTQ5ODc1ODR9.ob4O67C6OO6ZGn3Er15EoYNEgz0q46SivySoo8vH-mQ
+
+
+### Get all blogs
+GET http://localhost:3003/api/blogs
