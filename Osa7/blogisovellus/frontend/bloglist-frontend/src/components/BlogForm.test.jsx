@@ -39,7 +39,7 @@ describe('BlogForm', () => {
     expect(mockHandler).toHaveBeenCalledWith({
       title: 'New Blog',
       author: 'New Author',
-      url: 'https://newblog.com'
+      url: 'https://newblog.com',
     })
   })
 })

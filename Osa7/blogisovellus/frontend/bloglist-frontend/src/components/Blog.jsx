@@ -6,7 +6,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
 
   Blog.propTypes = {
-    blog: PropTypes.object.isRequired
+    blog: PropTypes.object.isRequired,
   }
 
   const blogStyle = {
@@ -14,13 +14,12 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
-
 
   return (
     <form>
-      <div style={blogStyle} className='blog'>
+      <div style={blogStyle} className="blog">
         <div>
           {blog.title}
           <button type="button" onClick={() => setShowDetails(!showDetails)}>
@@ -31,10 +30,16 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
           <div>
             <p>{blog.url}</p>
             <p>likes {blog.likes}</p>
-            <p><button type="button" onClick={handleLike}>like</button></p>
+            <p>
+              <button type="button" onClick={handleLike}>
+                like
+              </button>
+            </p>
             <p>{blog.user.name}</p>
             {user && user.username === blog.user.username && (
-              <button type="button" onClick={handleDelete}>remove</button>
+              <button type="button" onClick={handleDelete}>
+                remove
+              </button>
             )}
           </div>
         )}

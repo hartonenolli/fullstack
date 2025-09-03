@@ -11,8 +11,8 @@ describe('Blog', () => {
     likes: 0,
     user: {
       name: 'Test User',
-      username: 'testuser'
-    }
+      username: 'testuser',
+    },
   }
 
   test('renders blog title and author', () => {
