@@ -1,18 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import { setNotification, clearNotification } from './reducers/notificationReducer'
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
 
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
-  const [colorMessage, setColorMessage] = useState('')
   const togglableRef = useRef()
 
   useEffect(() => {
@@ -38,10 +39,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setMessage('wrong username or password')
-      setColorMessage('red')
+      console.error('Login failed:', exception)
+      dispatch(setNotification({ message: 'wrong username or password', color: 'red' }))
       setTimeout(() => {
-        setMessage(null)
+        dispatch(clearNotification())
       }, 5000)
     }
   }
@@ -56,20 +57,16 @@ const App = () => {
           user: user, // attach current user to the blog
         }
         setBlogs(blogs.concat(blogWithUser))
-        setMessage(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-        )
-        setColorMessage('green')
+        dispatch(setNotification({ message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, color: 'green' }))
         setTimeout(() => {
-          setMessage(null)
+          dispatch(clearNotification())
         }, 5000)
         togglableRef.current.toggleVisibility()
       })
       .catch((error) => {
-        setMessage('error creating blog')
-        setColorMessage('red')
+        dispatch(setNotification({ message: 'error creating blog', color: 'red' }))
         setTimeout(() => {
-          setMessage(null)
+          dispatch(clearNotification())
         }, 5000)
       })
   }
@@ -156,7 +153,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} colorMessage={colorMessage} />
+      <Notification />
       {!user && loginForm()}
       {user && (
         <div>
