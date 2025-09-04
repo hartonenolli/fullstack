@@ -4,12 +4,16 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import { initializeBlogs } from './reducers/blogReducer'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
 
 const App = () => {
   const dispatch = useDispatch()
+  // useEffect(() => {
+  //   dispatch(initializeBlogs())
+  // }, [dispatch])
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -162,7 +166,7 @@ const App = () => {
             <button onClick={handleLogout}>logout</button>
           </p>
           <Togglable buttonLabel="new blog" ref={togglableRef}>
-            <BlogForm createBlog={addBlog} />
+            <BlogForm />
           </Togglable>
           {blogForm()}
         </div>
