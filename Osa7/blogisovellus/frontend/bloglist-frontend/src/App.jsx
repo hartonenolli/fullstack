@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -11,18 +11,17 @@ import BlogForm from './components/BlogForm'
 
 const App = () => {
   const dispatch = useDispatch()
-  // useEffect(() => {
-  //   dispatch(initializeBlogs())
-  // }, [dispatch])
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector((state) => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const togglableRef = useRef()
-
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
+  // useEffect(() => {
+  //   blogService.getAll().then((blogs) => setBlogs(blogs))
+  // }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -51,63 +50,39 @@ const App = () => {
     }
   }
 
-  const addBlog = async (blogObject) => {
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        // Ensure the returned blog has the user info for author and delete button
-        const blogWithUser = {
-          ...returnedBlog,
-          user: user, // attach current user to the blog
-        }
-        setBlogs(blogs.concat(blogWithUser))
-        dispatch(setNotification({ message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, color: 'green' }))
-        setTimeout(() => {
-          dispatch(clearNotification())
-        }, 5000)
-        togglableRef.current.toggleVisibility()
-      })
-      .catch((error) => {
-        dispatch(setNotification({ message: 'error creating blog', color: 'red' }))
-        setTimeout(() => {
-          dispatch(clearNotification())
-        }, 5000)
-      })
-  }
+  // const handleLike = (blog) => {
+  //   const updatedBlog = {
+  //     ...blog,
+  //     likes: blog.likes + 1,
+  //   }
+  //   blogService
+  //     .like(blog.id, updatedBlog)
+  //     .then((returnedBlog) => {
+  //       const blogUser = {
+  //         ...returnedBlog,
+  //         user: blog.user,
+  //       }
+  //       setBlogs(blogs.map((b) => (b.id !== blog.id ? b : blogUser)))
+  //       console.log('Blog liked:', returnedBlog)
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error liking blog:', error)
+  //     })
+  // }
 
-  const handleLike = (blog) => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    }
-    blogService
-      .like(blog.id, updatedBlog)
-      .then((returnedBlog) => {
-        const blogUser = {
-          ...returnedBlog,
-          user: blog.user,
-        }
-        setBlogs(blogs.map((b) => (b.id !== blog.id ? b : blogUser)))
-        console.log('Blog liked:', returnedBlog)
-      })
-      .catch((error) => {
-        console.error('Error liking blog:', error)
-      })
-  }
-
-  const handleDelete = (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      blogService
-        .deleteBlog(blog.id)
-        .then(() => {
-          setBlogs(blogs.filter((b) => b.id !== blog.id))
-          console.log(`Blog ${blog.title} deleted`)
-        })
-        .catch((error) => {
-          console.error('Error deleting blog:', error)
-        })
-    }
-  }
+  // const handleDelete = (blog) => {
+  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+  //     blogService
+  //       .deleteBlog(blog.id)
+  //       .then(() => {
+  //         setBlogs(blogs.filter((b) => b.id !== blog.id))
+  //         console.log(`Blog ${blog.title} deleted`)
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error deleting blog:', error)
+  //       })
+  //   }
+  // }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -135,14 +110,14 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => (
+  const blogList = () => (
     <div>
       {blogs.map((blog) => (
         <Blog
           key={blog.id}
           blog={blog}
-          handleLike={() => handleLike(blog)}
-          handleDelete={() => handleDelete(blog)}
+          // handleLike={() => handleLike(blog)}
+          // handleDelete={() => handleDelete(blog)}
         />
       ))}
     </div>
@@ -168,7 +143,7 @@ const App = () => {
           <Togglable buttonLabel="new blog" ref={togglableRef}>
             <BlogForm />
           </Togglable>
-          {blogForm()}
+          {blogList()}
         </div>
       )}
     </div>
