@@ -11,6 +11,8 @@ import {
 } from './reducers/notificationReducer'
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
+import Users from './components/Users'
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -18,6 +20,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const user = useSelector((state) => state.login)
+  const padding = { padding: 5 }
   const togglableRef = useRef()
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -87,24 +90,42 @@ const App = () => {
     dispatch(logoutUser())
   }
 
+  if (!user) {
+    return (
+      <div>
+        <Notification />
+        {loginForm()}
+      </div>
+    )
+  }
+
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification />
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <p>
-            {user.name} logged in
-            <button onClick={handleLogout}>logout</button>
-          </p>
-          <Togglable buttonLabel="new blog" ref={togglableRef}>
-            <BlogForm />
-          </Togglable>
-          {blogList()}
-        </div>
-      )}
-    </div>
+    <Router>
+      <div>
+        <Link style={padding} to="/users">users</Link>
+        <Link style={padding} to="/">blogs</Link>
+        <Notification />
+        <h2>blogs</h2>
+        <p>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </p>
+        <Routes>
+          <Route path="/users" element={<Users getAllUsers={blogService.getAllUsers} />} />
+          <Route
+            path="/"
+            element={
+              <div>
+                <Togglable buttonLabel="new blog" ref={togglableRef}>
+                  <BlogForm />
+                </Togglable>
+                {blogList()}
+              </div>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
