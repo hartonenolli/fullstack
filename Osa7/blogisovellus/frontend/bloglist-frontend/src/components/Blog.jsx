@@ -1,15 +1,21 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { likeBlog } from '../reducers/blogReducer'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, handleDelete }) => {
+const Blog = ({ blog }) => {
   const [showDetails, setShowDetails] = useState(false)
   const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
   const dispatch = useDispatch()
 
   const handleLikeClick = () => {
     dispatch(likeBlog(blog))
+  }
+
+  const handleDelete = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      dispatch(removeBlog(blog.id))
+    }
   }
 
   Blog.propTypes = {

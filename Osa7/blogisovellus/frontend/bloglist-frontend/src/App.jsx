@@ -5,10 +5,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
-import {
-  setNotification,
-  clearNotification,
-} from './reducers/notificationReducer'
+import { setNotification, clearNotification } from './reducers/notificationReducer'
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
 
@@ -22,9 +19,6 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
-  // useEffect(() => {
-  //   blogService.getAll().then((blogs) => setBlogs(blogs))
-  // }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -46,48 +40,12 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       console.error('Login failed:', exception)
-      dispatch(
-        setNotification({ message: 'wrong username or password', color: 'red' })
-      )
+      dispatch(setNotification({ message: 'wrong username or password', color: 'red' }))
       setTimeout(() => {
         dispatch(clearNotification())
       }, 5000)
     }
   }
-
-  // const handleLike = (blog) => {
-  //   const updatedBlog = {
-  //     ...blog,
-  //     likes: blog.likes + 1,
-  //   }
-  //   blogService
-  //     .like(blog.id, updatedBlog)
-  //     .then((returnedBlog) => {
-  //       const blogUser = {
-  //         ...returnedBlog,
-  //         user: blog.user,
-  //       }
-  //       setBlogs(blogs.map((b) => (b.id !== blog.id ? b : blogUser)))
-  //       console.log('Blog liked:', returnedBlog)
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error liking blog:', error)
-  //     })
-  // }
-
-  // const handleDelete = (blog) => {
-  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-  //     blogService
-  //       .deleteBlog(blog.id)
-  //       .then(() => {
-  //         setBlogs(blogs.filter((b) => b.id !== blog.id))
-  //         console.log(`Blog ${blog.title} deleted`)
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error deleting blog:', error)
-  //       })
-  //   }
-  // }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -121,8 +79,6 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          // handleLike={() => handleLike(blog)}
-          // handleDelete={() => handleDelete(blog)}
         />
       ))}
     </div>
