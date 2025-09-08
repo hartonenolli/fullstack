@@ -1,9 +1,16 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { likeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, handleLike, handleDelete }) => {
+const Blog = ({ blog, handleDelete }) => {
   const [showDetails, setShowDetails] = useState(false)
   const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
+  const dispatch = useDispatch()
+
+  const handleLikeClick = () => {
+    dispatch(likeBlog(blog))
+  }
 
   Blog.propTypes = {
     blog: PropTypes.object.isRequired,
@@ -31,7 +38,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
             <p>{blog.url}</p>
             <p>likes {blog.likes}</p>
             <p>
-              <button type="button" onClick={handleLike}>
+              <button type="button" onClick={handleLikeClick}>
                 like
               </button>
             </p>

@@ -5,7 +5,10 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
-import { setNotification, clearNotification } from './reducers/notificationReducer'
+import {
+  setNotification,
+  clearNotification,
+} from './reducers/notificationReducer'
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
 
@@ -43,7 +46,9 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       console.error('Login failed:', exception)
-      dispatch(setNotification({ message: 'wrong username or password', color: 'red' }))
+      dispatch(
+        setNotification({ message: 'wrong username or password', color: 'red' })
+      )
       setTimeout(() => {
         dispatch(clearNotification())
       }, 5000)

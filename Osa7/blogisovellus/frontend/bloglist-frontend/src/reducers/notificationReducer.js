@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   message: null,
-  color: 'green'
+  color: 'green',
 }
 
 const notificationSlice = createSlice({
@@ -14,8 +14,8 @@ const notificationSlice = createSlice({
     },
     clearNotification() {
       return { message: null, color: 'green' }
-    }
-  }
+    },
+  },
 })
 
 export const { setNotification, clearNotification } = notificationSlice.actions

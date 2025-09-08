@@ -10,11 +10,13 @@ const BlogForm = () => {
 
   const handleNewBlog = (event) => {
     event.preventDefault()
-    dispatch(createBlog({
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-    }))
+    dispatch(
+      createBlog({
+        title: newTitle,
+        author: newAuthor,
+        url: newUrl,
+      })
+    )
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
