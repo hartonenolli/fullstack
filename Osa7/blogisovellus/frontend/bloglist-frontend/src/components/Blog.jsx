@@ -4,9 +4,10 @@ import { useDispatch } from 'react-redux'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog }) => {
+  const dispatch = useDispatch()
   const [showDetails, setShowDetails] = useState(false)
   const user = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
-  const dispatch = useDispatch()
+  console.log('logged in user:', user.username)
 
   const handleLikeClick = () => {
     dispatch(likeBlog(blog))

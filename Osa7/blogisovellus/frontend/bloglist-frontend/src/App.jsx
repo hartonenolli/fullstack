@@ -2,10 +2,13 @@ import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
+import { loginUser, logoutUser } from './reducers/loginReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { setNotification, clearNotification } from './reducers/notificationReducer'
+import {
+  setNotification,
+  clearNotification,
+} from './reducers/notificationReducer'
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
 
@@ -14,7 +17,7 @@ const App = () => {
   const blogs = useSelector((state) => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const user = useSelector((state) => state.login)
   const togglableRef = useRef()
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -24,23 +27,22 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
       blogService.setToken(user.token)
+      dispatch(setUser(user))
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
+      dispatch(loginUser({ username, password }))
       setUsername('')
       setPassword('')
     } catch (exception) {
       console.error('Login failed:', exception)
-      dispatch(setNotification({ message: 'wrong username or password', color: 'red' }))
+      dispatch(
+        setNotification({ message: 'wrong username or password', color: 'red' })
+      )
       setTimeout(() => {
         dispatch(clearNotification())
       }, 5000)
@@ -76,18 +78,13 @@ const App = () => {
   const blogList = () => (
     <div>
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-        />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   )
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
-    blogService.setToken(null)
+    dispatch(logoutUser())
   }
 
   return (
