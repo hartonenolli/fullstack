@@ -11,6 +11,7 @@ import {
 } from './reducers/notificationReducer'
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
+import SingleUser from './components/SingleUser'
 import Users from './components/Users'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 import { Container } from '@mui/material'
@@ -114,6 +115,7 @@ const App = () => {
         </p>
         <Routes>
           <Route path="/users" element={<Users getAllUsers={blogService.getAllUsers} />} />
+          <Route path="/users/:id" element={<SingleUser getAll={blogService.getAll} />} />
           <Route
             path="/"
             element={

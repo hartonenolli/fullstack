@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
+import { Link } from 'react-router-dom'
 
 const Users = ({ getAllUsers }) => {
     const [users, setUsers] = useState([])
@@ -13,6 +14,7 @@ const Users = ({ getAllUsers }) => {
     }, [])
 
     const sortedUsers = [...users].sort((a, b) => b.blogs.length - a.blogs.length)
+
     return (
         <TableContainer>
             <Table>
@@ -30,13 +32,16 @@ const Users = ({ getAllUsers }) => {
                 <TableBody>
                     {sortedUsers.map(user => (
                         <TableRow key={user.id}>
-                            <TableCell>{user.name}</TableCell>
+                            <TableCell>
+                                <Link to={`/users/${user.id}`}>{user.name}</Link>
+                            </TableCell>
                             <TableCell>{user.blogs.length}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
         </TableContainer>
+
     )
 }
 
