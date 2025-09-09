@@ -15,7 +15,7 @@ import SingleUser from './components/SingleUser'
 import SingleBlog from './components/SingleBlog'
 import Users from './components/Users'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
-import { Container } from '@mui/material'
+import { Container, AppBar, Toolbar } from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -105,13 +105,20 @@ const App = () => {
   return (
     <Container>
       <Router>
+      <AppBar position="static" style={{ marginBottom: '20px', padding: '10px' }}>
+        <Toolbar>
+          <h1>Blog App</h1>
+          <div>
+            <Link style={padding} to="/users">
+              users
+            </Link>
+            <Link style={padding} to="/">
+              blogs
+            </Link>
+          </div>
+        </Toolbar>
+      </AppBar>
         <div>
-          <Link style={padding} to="/users">
-            users
-          </Link>
-          <Link style={padding} to="/">
-            blogs
-          </Link>
           <Notification />
           <h2>blogs</h2>
           <p>
@@ -122,15 +129,15 @@ const App = () => {
             <Route
               path="/users"
               element={<Users getAllUsers={blogService.getAllUsers} />}
-            />
+              />
             <Route
               path="/users/:id"
               element={<SingleUser getAll={blogService.getAll} />}
-            />
+              />
             <Route
               path="/blogs/:id"
               element={<SingleBlog getById={blogService.getById} />}
-            />
+              />
             <Route
               path="/"
               element={
@@ -141,7 +148,7 @@ const App = () => {
                   {blogList()}
                 </div>
               }
-            />
+              />
           </Routes>
         </div>
       </Router>
