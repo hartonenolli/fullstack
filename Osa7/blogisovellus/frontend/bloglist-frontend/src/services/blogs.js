@@ -48,4 +48,12 @@ const getAllUsers = async () => {
   return response.data
 }
 
-export default { getAll, setToken, create, getById, like, deleteBlog, getAllUsers }
+export default {
+  getAll,
+  setToken,
+  create,
+  getById,
+  like,
+  deleteBlog,
+  getAllUsers,
+}

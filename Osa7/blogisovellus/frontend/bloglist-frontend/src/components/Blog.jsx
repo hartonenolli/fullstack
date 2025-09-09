@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog }) => {
   const dispatch = useDispatch()
@@ -35,7 +36,7 @@ const Blog = ({ blog }) => {
     <form>
       <div style={blogStyle} className="blog">
         <div>
-          {blog.title}
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
           <button type="button" onClick={() => setShowDetails(!showDetails)}>
             {showDetails ? 'hide' : 'view'}
           </button>

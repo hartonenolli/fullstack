@@ -12,6 +12,7 @@ import {
 import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
 import SingleUser from './components/SingleUser'
+import SingleBlog from './components/SingleBlog'
 import Users from './components/Users'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 import { Container } from '@mui/material'
@@ -103,33 +104,47 @@ const App = () => {
 
   return (
     <Container>
-    <Router>
-      <div>
-        <Link style={padding} to="/users">users</Link>
-        <Link style={padding} to="/">blogs</Link>
-        <Notification />
-        <h2>blogs</h2>
-        <p>
-          {user.name} logged in
-          <button onClick={handleLogout}>logout</button>
-        </p>
-        <Routes>
-          <Route path="/users" element={<Users getAllUsers={blogService.getAllUsers} />} />
-          <Route path="/users/:id" element={<SingleUser getAll={blogService.getAll} />} />
-          <Route
-            path="/"
-            element={
-              <div>
-                <Togglable buttonLabel="new blog" ref={togglableRef}>
-                  <BlogForm />
-                </Togglable>
-                {blogList()}
-              </div>
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
+      <Router>
+        <div>
+          <Link style={padding} to="/users">
+            users
+          </Link>
+          <Link style={padding} to="/">
+            blogs
+          </Link>
+          <Notification />
+          <h2>blogs</h2>
+          <p>
+            {user.name} logged in
+            <button onClick={handleLogout}>logout</button>
+          </p>
+          <Routes>
+            <Route
+              path="/users"
+              element={<Users getAllUsers={blogService.getAllUsers} />}
+            />
+            <Route
+              path="/users/:id"
+              element={<SingleUser getAll={blogService.getAll} />}
+            />
+            <Route
+              path="/blogs/:id"
+              element={<SingleBlog getById={blogService.getById} />}
+            />
+            <Route
+              path="/"
+              element={
+                <div>
+                  <Togglable buttonLabel="new blog" ref={togglableRef}>
+                    <BlogForm />
+                  </Togglable>
+                  {blogList()}
+                </div>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
     </Container>
   )
 }
