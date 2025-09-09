@@ -15,6 +15,7 @@ const SingleBlog = ({ getById }) => {
     }
     fetchBlog()
   }, [getById, id])
+  console.log('single blog:', blog);
 
   if (!blog) {
     return <div>Loading...</div>
@@ -34,6 +35,12 @@ const SingleBlog = ({ getById }) => {
         <button onClick={handleLike}>like</button>
       </p>
       <p>Author: {blog.author}</p>
+        <h3>Comments</h3>
+        <ul>
+          {blog.comments.map((comment, index) => (
+            <li key={index}>{comment}</li>
+          ))}
+        </ul>
     </div>
   )
 }

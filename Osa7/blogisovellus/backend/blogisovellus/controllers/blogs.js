@@ -4,6 +4,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const { userExtractor } = require('../utils/middleware')
+const { default: blogs } = require('../../../frontend/bloglist-frontend/src/services/blogs')
 
 blogsRouter.get('/', async (request, response, next) => {
     try {
@@ -92,6 +93,25 @@ blogsRouter.put('/:id', async (request, response, next) => {
                 }
             } else {
                 response.status(404).end()
+            }
+        } catch (exception) {
+            next(exception)
+        }
+    })
+
+    blogsRouter.post('/:id/comments', async (request, response, next) => {
+        const { comment } = request.body
+        if (!comment) {
+            return response.status(400).json({ error: 'Comment is required' })
+        }
+        try {
+            const blog = await Blog.findById(request.params.id)
+            if (blog) {
+                blog.comments = blog.comments.concat(comment)
+                const updatedBlog = await blog.save()
+                response.status(201).json(updatedBlog)
+            } else {
+                response.status(404).json({ error: 'Blog not found' })
             }
         } catch (exception) {
             next(exception)
