@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import { Alert, Box } from '@mui/material'
 
 const Notification = () => {
   const notification = useSelector((state) => state.notification)
@@ -14,7 +15,13 @@ const Notification = () => {
     borderRadius: 5,
   }
 
-  return <div style={style}>{notification.message}</div>
+  return (
+    <Box sx={{ mb: 2 }}>
+      <Alert severity={notification.color} style={style}>
+        {notification.message}
+      </Alert>
+    </Box>
+  )
 }
 
 export default Notification

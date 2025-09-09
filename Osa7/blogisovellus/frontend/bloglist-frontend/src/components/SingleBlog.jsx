@@ -17,7 +17,7 @@ const SingleBlog = ({ getById }) => {
     }
     fetchBlog()
   }, [getById, id])
-  console.log('single blog:', blog);
+  console.log('single blog:', blog)
 
   if (!blog) {
     return <div>Loading...</div>
@@ -32,7 +32,10 @@ const SingleBlog = ({ getById }) => {
     event.preventDefault()
     const commentText = event.target.comment.value
     try {
-      const updatedBlog = await BlogService.addNewCommentToBlog(blog.id, commentText)
+      const updatedBlog = await BlogService.addNewCommentToBlog(
+        blog.id,
+        commentText
+      )
       setBlog(updatedBlog)
       setNewComment('')
       event.target.comment.value = ''
@@ -50,16 +53,16 @@ const SingleBlog = ({ getById }) => {
         <button onClick={handleLike}>like</button>
       </p>
       <p>Author: {blog.author}</p>
-        <h3>Comments</h3>
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="comment" />
-          <button type="submit">add comment</button>
-        </form>
-        <ul>
-          {blog.comments.map((comment, index) => (
-            <li key={index}>{comment}</li>
-          ))}
-        </ul>
+      <h3>Comments</h3>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="comment" />
+        <button type="submit">add comment</button>
+      </form>
+      <ul>
+        {blog.comments.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul>
     </div>
   )
 }

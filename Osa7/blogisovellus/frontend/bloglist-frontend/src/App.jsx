@@ -15,7 +15,40 @@ import SingleUser from './components/SingleUser'
 import SingleBlog from './components/SingleBlog'
 import Users from './components/Users'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
-import { Container, AppBar, Toolbar } from '@mui/material'
+import {
+  Container,
+  AppBar,
+  Toolbar,
+  Button,
+  Box,
+  CssBaseline,
+} from '@mui/material'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: { main: '#1976d2' },
+    secondary: { main: '#dc004e' },
+    background: {
+      default: '#f5f5f5',
+      paper: '#ffffff',
+    },
+  },
+})
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#90caf9' },
+    secondary: { main: '#f48fb1' },
+    background: {
+      default: '#121212',
+      paper: '#1d1d1d',
+    },
+    text: { primary: '#ffffff' },
+  },
+})
 
 const App = () => {
   const dispatch = useDispatch()
@@ -25,6 +58,8 @@ const App = () => {
   const user = useSelector((state) => state.login)
   const padding = { padding: 5 }
   const togglableRef = useRef()
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
@@ -84,13 +119,19 @@ const App = () => {
   const blogList = () => (
     <div>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Box mb={2} key={blog.id} color={'secondary.main'}>
+          <Blog blog={blog} />
+        </Box>
       ))}
     </div>
   )
 
   const handleLogout = () => {
     dispatch(logoutUser())
+  }
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode)
   }
 
   if (!user) {
@@ -104,54 +145,72 @@ const App = () => {
 
   return (
     <Container maxWidth="md">
-      <Router>
-      <AppBar position="static" style={{ marginBottom: '20px', padding: '10px' }}>
-        <Toolbar>
-          <h1>Blog App</h1>
-          <div>
-            <Link style={padding} to="/users">
-              users
-            </Link>
-            <Link style={padding} to="/">
-              blogs
-            </Link>
-          </div>
-        </Toolbar>
-      </AppBar>
-        <div>
-          <Notification />
-          <h2>blogs</h2>
-          <p>
-            {user.name} logged in
-            <button onClick={handleLogout}>logout</button>
-          </p>
-          <Routes>
-            <Route
-              path="/users"
-              element={<Users getAllUsers={blogService.getAllUsers} />}
-              />
-            <Route
-              path="/users/:id"
-              element={<SingleUser getAll={blogService.getAll} />}
-              />
-            <Route
-              path="/blogs/:id"
-              element={<SingleBlog getById={blogService.getById} />}
-              />
-            <Route
-              path="/"
-              element={
+      <Box
+        sx={{
+          bgcolor: 'background.default',
+          color: 'text.primary',
+          minHeight: '100vh',
+          p: 2,
+        }}
+      >
+        <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+          <CssBaseline />
+          <Button onClick={toggleTheme} style={{ marginTop: '10px' }}>
+            Switch to {isDarkMode ? 'Light' : 'Dark'} Mode
+          </Button>
+          <Router>
+            <AppBar
+              position="static"
+              style={{ marginBottom: '20px', padding: '10px' }}
+            >
+              <Toolbar>
+                <h1>Blog App</h1>
                 <div>
-                  <Togglable buttonLabel="new blog" ref={togglableRef}>
-                    <BlogForm />
-                  </Togglable>
-                  {blogList()}
+                  <Link style={padding} to="/users">
+                    users
+                  </Link>
+                  <Link style={padding} to="/">
+                    blogs
+                  </Link>
                 </div>
-              }
-              />
-          </Routes>
-        </div>
-      </Router>
+              </Toolbar>
+            </AppBar>
+            <div>
+              <Notification />
+              <h2>blogs</h2>
+              <p>
+                {user.name} logged in
+                <Button onClick={handleLogout}>logout</Button>
+              </p>
+              <Routes>
+                <Route
+                  path="/users"
+                  element={<Users getAllUsers={blogService.getAllUsers} />}
+                />
+                <Route
+                  path="/users/:id"
+                  element={<SingleUser getAll={blogService.getAll} />}
+                />
+                <Route
+                  path="/blogs/:id"
+                  element={<SingleBlog getById={blogService.getById} />}
+                />
+                <Route
+                  path="/"
+                  element={
+                    <div>
+                      <Togglable buttonLabel="new blog" ref={togglableRef}>
+                        <BlogForm />
+                      </Togglable>
+                      {blogList()}
+                    </div>
+                  }
+                />
+              </Routes>
+            </div>
+          </Router>
+        </ThemeProvider>
+      </Box>
     </Container>
   )
 }

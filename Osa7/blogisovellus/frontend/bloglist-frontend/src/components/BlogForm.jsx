@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
+import {
+  setNotification,
+  clearNotification,
+} from '../reducers/notificationReducer'
 
 const BlogForm = () => {
   const dispatch = useDispatch()
@@ -20,6 +24,15 @@ const BlogForm = () => {
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
+    dispatch(
+      setNotification({
+        message: `a new blog ${newTitle} by ${newAuthor} added`,
+        color: 'green',
+      })
+    )
+    setTimeout(() => {
+      dispatch(clearNotification())
+    }, 5000)
   }
 
   return (
