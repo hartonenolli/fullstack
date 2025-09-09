@@ -13,6 +13,7 @@ import Togglable from './components/Toggable'
 import BlogForm from './components/BlogForm'
 import Users from './components/Users'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
+import { Container } from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -100,6 +101,7 @@ const App = () => {
   }
 
   return (
+    <Container>
     <Router>
       <div>
         <Link style={padding} to="/users">users</Link>
@@ -126,6 +128,7 @@ const App = () => {
         </Routes>
       </div>
     </Router>
+    </Container>
   )
 }
 
