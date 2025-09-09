@@ -48,6 +48,18 @@ const getAllUsers = async () => {
   return response.data
 }
 
+const addNewCommentToBlog = async (id, commentText) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.post(
+    `${baseUrl}/${id}/comments`,
+    { comment: commentText },
+    config
+  )
+  return response.data
+}
+
 export default {
   getAll,
   setToken,
@@ -56,4 +68,5 @@ export default {
   like,
   deleteBlog,
   getAllUsers,
+  addNewCommentToBlog,
 }
