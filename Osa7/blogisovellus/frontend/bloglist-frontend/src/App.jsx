@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
-import { loginUser, logoutUser } from './reducers/loginReducer'
+import { loginUser, logoutUser, setUser } from './reducers/loginReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import {
   setNotification,
@@ -103,7 +103,7 @@ const App = () => {
   }
 
   return (
-    <Container>
+    <Container maxWidth="md">
       <Router>
       <AppBar position="static" style={{ marginBottom: '20px', padding: '10px' }}>
         <Toolbar>
