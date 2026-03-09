@@ -1,0 +1,17 @@
+{
+  "name": "kirjasto-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "library-backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node library-backend.js",
+    "dev": "node --watch library-backend.js"
+  },
+  "author": "Olli Hartonen",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^5.4.0",
+    "graphql": "^16.13.1"
+  }
+}
