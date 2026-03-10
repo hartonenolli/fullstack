@@ -98,24 +98,26 @@ let books = [
 */
 
 const typeDefs = /* GraphQL */ `
-  type Book {
-    title: String!
-    published: Int!
-    author: String!
-    id: ID!
-    genres: [String!]!
-  }
-
   type Author {
     name: String!
     id: ID!
     born: Int
+    bookCount: Int!
+  }
+
+  type Book {
+    title: String!
+    published: Int!
+    author: Author!
+    id: ID!
+    genres: [String!]!
   }
 
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks: [Book!]!
+    allAuthors: [Author!]!
   }
 `
 
@@ -124,6 +126,17 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: () => books,
+    allAuthors: () => authors,
+  },
+  Author: {
+    bookCount: (root) => books.filter(book => book.author === root.name).length
+  },
+  Book: {
+    author: (root) => {
+      return {
+        name: root.author,
+      }
+    }
   }
 }
 
