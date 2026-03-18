@@ -113,15 +113,23 @@ const typeDefs = /* GraphQL */ `
     bookCount: Int!
   }
 
-
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks(name: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
-`
 
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String!]!
+    ): Book!
+  }
+`
+const { v1: uuid } = require('uuid')
 const resolvers = {
   Query: {
     bookCount: () => books.length,
@@ -143,6 +151,22 @@ const resolvers = {
   },
   Author: {
     bookCount: (root) => books.filter(book => book.author === root.name).length
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+      const authorExists = authors.find(author => author.name === args.author)
+
+      if (!authorExists) {
+        const author = {
+          name: args.author,
+          id: uuid(),
+        }
+        authors = authors.concat(author)
+      }
+      return book
+    }
   }
 }
 
