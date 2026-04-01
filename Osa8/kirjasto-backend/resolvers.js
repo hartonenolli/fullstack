@@ -1,3 +1,4 @@
+const { GraphQLError } = require('graphql')
 const Author = require('./models/author')
 const Book = require('./models/book')
 
@@ -31,6 +32,30 @@ const resolvers = {
     Mutation: {
         addBook: async (_, args) => {
             let author = await Author.findOne({ name: args.author })
+            if (!args.title || !args.author) {
+                throw new GraphQLError('Title and author are required', {
+                    extensions: {
+                        code: 'BAD_USER_INPUT',
+                        invalidArgs: args,
+                    }
+                })
+            }
+            if (args.title.length < 3) {
+                throw new GraphQLError('Title must be at least 3 characters long', {
+                    extensions: {
+                        code: 'BAD_USER_INPUT',
+                        invalidArgs: args,
+                    }
+                })
+            }
+            if (args.author.length < 3) {
+                throw new GraphQLError('Author name must be at least 3 characters long', {
+                    extensions: {
+                        code: 'BAD_USER_INPUT',
+                        invalidArgs: args,
+                    }
+                })
+            }
             if (!author) {
                 author = new Author({ name: args.author })
                 await author.save()
