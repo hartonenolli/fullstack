@@ -11,12 +11,23 @@ const NewBook = (props) => {
   const [genres, setGenres] = useState([])
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [ALL_BOOKS, ALL_AUTHORS]
+    refetchQueries: [ALL_BOOKS, ALL_AUTHORS],
+    context: {
+      headers: {
+        authorization: localStorage.getItem('library-user-token')
+      }
+    }
   })
 
   if (!props.show) {
     return null
   }
+  if (!props.token) {
+    return <div>
+      <p>You must be logged in to add a book</p>
+    </div>
+  }
+
 
   const submit = async (event) => {
     event.preventDefault()

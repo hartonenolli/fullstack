@@ -10,6 +10,11 @@ const BirthYear = (props) => {
   if (!props.show) {
     return null
   }
+  if (!props.token) {
+    return <div>
+      <p>You must be logged in to edit an author</p>
+    </div>
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault()
