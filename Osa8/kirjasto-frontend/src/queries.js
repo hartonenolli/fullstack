@@ -34,6 +34,13 @@ export const ALL_BOOKS = gql`
     }
   }
 `
+export const FAVORITE_GENRE = gql`
+  query {
+    me {
+      favoriteGenre
+    }
+  }
+`
 
 export const UPDATE_AUTHOR = gql`
   mutation updateAuthor($name: String!, $setBornTo: Int!) {
