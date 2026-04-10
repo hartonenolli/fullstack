@@ -8,31 +8,40 @@ const resolvers = {
     Query: {
         bookCount: async () => await Book.collection.countDocuments(),
         authorCount: async () => await Author.collection.countDocuments(),
-allBooks: async (_, args) => {
-  let filter = {}
+        allBooks: async (_, args) => {
+            let filter = {}
 
-  if (args.name) {
-    const author = await Author.findOne({ name: args.name })
-    if (!author) return []
-    filter.author = author._id
-  }
+            if (args.name) {
+                const author = await Author.findOne({ name: args.name })
+                if (!author) return []
+                filter.author = author._id
+            }
 
-  if (args.genre) {
-    filter.genres = { $in: [args.genre] }
-  }
+            if (args.genre) {
+                filter.genres = { $in: [args.genre] }
+            }
 
-  const books = await Book.find(filter)
-  return books
-},
+            const books = await Book.find(filter)
+            return books
+        },
         allAuthors: async () => Author.find({}),
         me: async (_, __, { currentUser }) => currentUser,
+        genres: async () => {
+            const books = await Book.find({})
+            const genres = new Set()
+            books.forEach(book => {
+                book.genres.forEach(genre => genres.add(genre))
+            })
+            return Array.from(genres)
+        },
     },
-Book: {
-  author: async (book) => {
-    if (!book.author) return null
-    return Author.findById(book.author)
-  }
-},
+
+    Book: {
+        author: async (book) => {
+            if (!book.author) return null
+            return Author.findById(book.author)
+        }
+    },
     Author: {
         bookCount: (author) => Book.find({ author: author._id }).then(books => books.length)
     },

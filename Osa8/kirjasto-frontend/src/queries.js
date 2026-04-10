@@ -34,6 +34,13 @@ export const ALL_BOOKS = gql`
     }
   }
 `
+
+export const GENRES = gql`
+  query {
+    genres
+  }
+`
+
 export const FAVORITE_GENRE = gql`
   query {
     me {
